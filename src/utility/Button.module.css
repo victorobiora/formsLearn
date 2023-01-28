@@ -9,6 +9,11 @@
     cursor: pointer;
 }
 
+.buttonInvalid {
+    background-color: rgb(48, 39, 39);
+    color: rgb(17, 16, 15);
+}
+
 .div {
     text-align: right;
 }

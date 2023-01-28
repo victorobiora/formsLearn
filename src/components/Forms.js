@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import classes from './Forms.module.css'
 import Button from '../utility/Button'
 
@@ -6,6 +6,8 @@ import Button from '../utility/Button'
 const Forms = props => {
     const [enteredNameIsValid, setEnteredNameIsValid] = useState(null);
     const [emailInputValid, setEmailInputValid] = useState(null)
+    const [formValid, setFormValid] = useState(false)
+        
     let errorMessageText = 'Name Cannot be Empty'   
     let [errorMessageEmail, setErrorMessageEmail] = useState('email cannot be empty')
 
@@ -39,6 +41,13 @@ const Forms = props => {
         const inputClass = (para) => para || para === null ? classes.input :
          `${classes.input} ${classes.notValid}`;
 
+         useEffect(()=> {
+        if(enteredNameIsValid && emailInputValid){
+            setFormValid(true)
+        }
+        console.log(formValid)
+         }, [enteredNameIsValid, emailInputValid, formValid])
+
     return (
           <form className = {classes.forms} onSubmit = {formSubmitHandler}>
         <div >
@@ -57,7 +66,7 @@ const Forms = props => {
               />
         {emailInputValid === false && <p> {errorMessageEmail} </p>}
         </div>
-        <Button text = 'Submit' onButtonHit = {formSubmitHandler}/>
+        <Button text = 'Submit' onButtonHit = {formSubmitHandler} buttonStyle={formValid}/>
     </form>
     )
   
