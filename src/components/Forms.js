@@ -1,70 +1,63 @@
 import React, { useEffect, useState } from 'react'
 import classes from './Forms.module.css'
-import Button from '../utility/Button'
+import Button from '../utility/Button';
+import useInputHook from '../hooks/useInputHook';
 
 
 const Forms = props => {
-    const [enteredNameIsValid, setEnteredNameIsValid] = useState(null);
-    const [emailInputValid, setEmailInputValid] = useState(null)
+    const  { validate: validateName,
+        validInput: validInputName,
+         enteredInput: enteredInputName} = useInputHook()
+
+    const  { validate: validateEmail,
+         validInput: validInputEmail,
+          enteredInput: enteredInputEmail} = useInputHook()
+
     const [formValid, setFormValid] = useState(false)
         
-    let errorMessageText = 'Name Cannot be Empty'   
-    let [errorMessageEmail, setErrorMessageEmail] = useState('email cannot be empty')
-
-
+ 
     const formSubmitHandler = event => {
         event.preventDefault()
         console.log('gkojb9jofpm;bl')
         }
 
         const enteredNameHandler = event => {
-            if(event.target.value.trim() === ''){
-             setEnteredNameIsValid(false)     
-            }else {
-                setEnteredNameIsValid(true)
-            }
-
+            validateName(event.target.value, 'name')
+            console.log(enteredInputName)
         };
 
         const enteredEmailHandler = event => {
-            if(!event.target.value.includes('@') && event.target.value.trim() !== ''){
-                setEmailInputValid(false)
-                setErrorMessageEmail('E-mails need to have @ included')
-            }else if(event.target.value.trim() === ''){
-                     setEmailInputValid(false)
-                     setErrorMessageEmail('E-mail cannot be empty')
-            } else {
-                setEmailInputValid(true)
-            }
+            validateEmail(event.target.value, 'email');
+            console.log(enteredInputEmail)
         }
       
         const inputClass = (para) => para || para === null ? classes.input :
          `${classes.input} ${classes.notValid}`;
 
          useEffect(()=> {
-        if(enteredNameIsValid && emailInputValid){
+        if(validInputEmail && validInputName){
             setFormValid(true)
         }
         console.log(formValid)
-         }, [enteredNameIsValid, emailInputValid, formValid])
+         }, [validInputName, validInputEmail, formValid])
 
     return (
           <form className = {classes.forms} onSubmit = {formSubmitHandler}>
         <div >
             <h5> Your Name </h5>
             <input type='text'
-            className={inputClass(enteredNameIsValid)}
+            className={inputClass(validInputName)}
             onChange = {enteredNameHandler}
             onBlur = {enteredNameHandler} />
-            {enteredNameIsValid === false && <p> {errorMessageText}</p>}
+            {validInputName === false && <p> name cannot be empty</p>}
         </div>
         <div>
             <h5> Your Email </h5>
-            <input type='email'className={inputClass(emailInputValid)}
+            <input type='email'className={inputClass(validInputEmail)}
               onChange = {enteredEmailHandler}
               onBlur = {enteredEmailHandler}
               />
-        {emailInputValid === false && <p> {errorMessageEmail} </p>}
+        {validInputEmail === false && <p> please enter a valid email</p>}
         </div>
         <Button text = 'Submit' onButtonHit = {formSubmitHandler} buttonStyle={formValid}/>
     </form>
